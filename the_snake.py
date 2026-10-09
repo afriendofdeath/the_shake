@@ -1,7 +1,5 @@
 import random
-
 import pygame
-
 
 # Константы игрового поля
 SCREEN_WIDTH, SCREEN_HEIGHT = 640, 480
