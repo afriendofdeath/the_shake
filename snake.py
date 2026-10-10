@@ -60,7 +60,7 @@ class GameObject:
     def draw(self):
         """Отрисовывает игровой объект."""
         raise NotImplementedError(
-            "В дочернем классе нужно определить draw()."
+            'В дочернем классе нужно определить draw().'
         )
 
 
