@@ -1,6 +1,6 @@
 import pygame
 
-from the_snake import Apple, Snake
+from snake import Apple, Snake
 
 
 def test_snake_initialization():
