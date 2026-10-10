@@ -36,13 +36,16 @@ DIRECTION_BY_KEY = {
     ((0, 1), pg.K_RIGHT): RIGHT,
 }
 
-screen = None
+# Тесты ожидают, что игровое окно и часы доступны на уровне модуля.
+pg.init()
+screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+clock = pg.time.Clock()
 
 
 class GameObject:
     """Базовый класс игровых объектов."""
 
-    def __init__(self, body_color):
+    def __init__(self, body_color=SNAKE_COLOR):
         """Инициализирует игровой объект и задаёт его цвет."""
         self.position = (
             SCREEN_WIDTH // 2 // GRID_SIZE * GRID_SIZE,
@@ -118,12 +121,9 @@ class Snake(GameObject):
             self.last = self.positions.pop()
 
     def draw(self):
-        """Отрисовывает голову змейки и стирает прежний хвост."""
-        if self.last is not None:
-            self.draw_cell(
-                self.last, BOARD_BACKGROUND_COLOR, draw_border=False
-            )
-        self.draw_cell(self.position, self.body_color)
+        """Отрисовывает все сегменты змейки."""
+        for position in self.positions:
+            self.draw_cell(position, self.body_color)
 
     def get_head_position(self):
         """Возвращает координаты головы."""
@@ -153,14 +153,7 @@ def handle_keys(game_object):
 
 def main():
     """Запускает основной игровой цикл."""
-    global screen
-
-    pg.init()
-    pg.display.init()
     pg.display.set_caption('Змейка')
-    screen = pg.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    clock = pg.time.Clock()
-
     snake = Snake()
     apple = Apple(snake.positions)
     screen.fill(BOARD_BACKGROUND_COLOR)
@@ -178,12 +171,11 @@ def main():
             if snake.get_head_position() == apple.position:
                 snake.length += 1
                 apple.randomize_position(snake.positions)
-                snake.last = None
-            elif snake.get_head_position() in snake.positions[1:]:
-                screen.fill(BOARD_BACKGROUND_COLOR)
-                snake.reset()
-                apple.randomize_position(snake.positions)
 
+            if snake.get_head_position() in snake.positions[1:]:
+                snake.reset()
+
+            screen.fill(BOARD_BACKGROUND_COLOR)
             snake.draw()
             apple.draw()
             pg.display.update()
